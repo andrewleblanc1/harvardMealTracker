@@ -1,0 +1,427 @@
+:root {
+  --crimson: #a51c30;
+  --crimson-dark: #7c1524;
+  --bg: #faf7f2;
+  --card-bg: #ffffff;
+  --text: #1f1a17;
+  --text-muted: #6b6259;
+  --border: #e8e1d8;
+  --shadow: 0 1px 3px rgba(31, 26, 23, 0.08), 0 8px 24px rgba(31, 26, 23, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --crimson: #d54a5f;
+    --crimson-dark: #a51c30;
+    --bg: #17130f;
+    --card-bg: #211b16;
+    --text: #f2ece4;
+    --text-muted: #a89d90;
+    --border: #33291f;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 2rem;
+  text-align: center;
+}
+
+.dining-hall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.dining-hall-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.dining-hall-card:hover,
+.dining-hall-card:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--crimson);
+  box-shadow: 0 4px 8px rgba(31, 26, 23, 0.1), 0 12px 28px rgba(165, 28, 48, 0.14);
+}
+
+.hall-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.hall-icon-fallback {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--crimson);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.hall-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding-top: 2rem;
+}
+
+.hall-page .hall-icon,
+.hall-page .hall-icon-fallback {
+  width: 96px;
+  height: 96px;
+  font-size: 2rem;
+}
+
+.hall-page h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.hall-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  text-align: left;
+}
+
+.hall-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.meal-plan-panel {
+  flex: 0 0 260px;
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+}
+
+.meal-plan-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.meal-plan-empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.meal-plan-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meal-plan-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.meal-plan-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.meal-plan-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.meal-plan-item-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meal-plan-item-calories {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.meal-plan-item-remove {
+  appearance: none;
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.meal-plan-item-remove:hover,
+.meal-plan-item-remove:focus-visible {
+  background: color-mix(in srgb, var(--crimson) 12%, transparent);
+  color: var(--crimson);
+}
+
+.meal-plan-total {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.meal-plan-item-macros {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+@media (max-width: 720px) {
+  .hall-content {
+    flex-direction: column;
+  }
+
+  .meal-plan-panel {
+    flex: 0 0 auto;
+    width: 100%;
+    position: static;
+  }
+}
+
+.back-link {
+  color: var(--crimson);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.meal-tabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  margin-top: 0.5rem;
+}
+
+.meal-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.meal-tab:hover {
+  color: var(--text);
+}
+
+.meal-tab.active {
+  background: var(--crimson);
+  color: #fff;
+}
+
+.menu-status {
+  color: var(--text-muted);
+  margin-top: 1.5rem;
+}
+
+.menu-error {
+  color: var(--crimson);
+}
+
+.menu-list {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+}
+
+.menu-item-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.menu-item-name {
+  font-weight: 600;
+  text-align: left;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-item-serving {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.menu-item-calories {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.menu-item-add {
+  appearance: none;
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 1px solid var(--crimson);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--crimson);
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.menu-item-add:hover,
+.menu-item-add:focus-visible {
+  background: var(--crimson);
+  color: #fff;
+}
+
+.menu-item-add.added {
+  background: var(--crimson);
+  color: #fff;
+}
+
+.menu-item-macros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+
+.menu-item-macro {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.menu-item-allergens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.allergen-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--crimson);
+  background: color-mix(in srgb, var(--crimson) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--crimson) 30%, transparent);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  text-transform: capitalize;
+}
