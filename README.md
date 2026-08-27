@@ -90,3 +90,6 @@ Returns `{ "items": [ ... ] }`, where each item has `name`, `serving_size`,
   (`api.cs50.io`), so the app requires network access to that service.
 - Dining hall icons live in `public/icons/<hall-id>.jpg`; if one is missing,
   `Icon.js` falls back to a colored circle with the hall's initial.
+
+## Reflection
+
