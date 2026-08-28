@@ -13,12 +13,21 @@ and optionally filters out items containing allergens the caller wants to
 avoid.
 """
 
+import os
+import sys
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI, HTTPException
-from meals import standardNutritionFacts
 import requests
+
+# Vercel imports this file as `api.index` from the project root, so this
+# directory isn't on sys.path there and a bare `import meals` would fail.
+# Locally (`uvicorn index:app` from inside api/) it already is; adding it is
+# harmless either way.
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from meals import standardNutritionFacts
 
 app = FastAPI()
 

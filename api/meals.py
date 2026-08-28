@@ -7,10 +7,8 @@ flattens everything into plain strings the frontend can render directly.
 
 import requests
 
-response = requests.get("https://api.cs50.io/dining/recipes")
-recipes = response.json()
 
-def standardNutritionFacts(recipes: dict) -> [standardizedNutritionFacts, indexConversion]:
+def standardNutritionFacts(recipes: dict) -> list:
     """Build a normalized recipe list plus a recipe-id -> list-index map.
 
     `indexConversion` lets callers (see index.py) look up a recipe's entry in

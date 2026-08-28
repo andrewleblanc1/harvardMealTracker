@@ -18,9 +18,12 @@ carbs, fat, fiber, and sugar.
   Vercel builds any `api/*.py` file with an `app` FastAPI instance
   automatically, no separate server to run in production.
 - The browser calls the backend directly at `/api/py/menu` (same origin, so
-  there's no separate URL to expose). `next.config.js` rewrites that path to
+  there's no separate URL to expose). `next.config.js` rewrites that path in
+  both environments: to the deployed Python function in production (Vercel
+  serves it at `/api/`, and nothing would reach `/api/py/*` otherwise), and to
   a local `uvicorn` process during `next dev`, since that's the only piece
-  Next.js's dev server doesn't also run for you.
+  Next.js's dev server doesn't also run for you. The original `/api/py/...`
+  path survives the rewrite, which is why the FastAPI routes use that prefix.
 
 ```
 Browser → /api/py/menu → FastAPI (api/index.py) → CS50 Dining API
@@ -45,7 +48,8 @@ api/
   meals.py                Normalizes raw CS50 recipe data into a consistent
                            dict shape (name, calories, macros, allergens)
 public/icons/             Dining hall photos used by Icon.js
-next.config.js            Dev-only rewrite of /api/py/* to local uvicorn
+next.config.js            Rewrites /api/py/* to the Python function (prod)
+                           or local uvicorn (dev)
 requirements.txt          Python deps for the api/ serverless function
 ```
 
@@ -71,8 +75,8 @@ cd api && uvicorn index:app --reload --port 8000
 ```
 
 `next.config.js` expects the backend at `http://127.0.0.1:8000` during dev;
-in production Vercel routes `/api/py/*` straight to the deployed function,
-no configuration needed.
+in production the same config rewrites `/api/py/*` to the deployed Python
+function, so no separate server is needed there.
 
 ## API
 
