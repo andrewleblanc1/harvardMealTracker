@@ -146,7 +146,8 @@ export default function HallLayout({ id, name }) {
             </p>
           )}
           {!loading && !error && items.length === 0 && (
-            <p className="menu-status">No items found for this meal.</p>
+            <p className="menu-status">No items found for this meal. This dining hall is either closed or there 
+            is a failure by the CS50 Dining API, please check other dining halls for meals</p>
           )}
           {!loading && !error && items.length > 0 && (
             <ul className="menu-list">
