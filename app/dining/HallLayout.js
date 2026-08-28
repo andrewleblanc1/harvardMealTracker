@@ -78,34 +78,38 @@ export default function HallLayout({ id, name }) {
   }
 
   // Nutrition values from the API can include units/whitespace (e.g. "12g"),
-  // so each total strips non-numeric characters before multiplying by
-  // servings, then rounds to one decimal place.
+  // so each total strips non-numeric characters.
+  // truncateToPlace rounds to first decimal
+  function truncateToPlace(num, places) {
+    const factor = Math.pow(10, places);
+    return Math.trunc(num * factor) / factor;
+}
   const planCalories = plan.reduce(
-    (sum, item) => sum + ((Math.round(10 * item.servings * Number(item.calories)) /10) || 0),
+    (sum, item) => truncateToPlace(sum + (( item.servings * Number(item.calories)) || 0), 1),
     0
   );
   const planProtein = plan.reduce(
-    (sum, item) => sum + ((Math.round(10 * item.servings * Number(String(item.protein).replace(/[^\d.]/g, ""))) / 10) || 0),
+    (sum, item) => truncateToPlace(sum + (( item.servings * Number(String(item.protein).replace(/[^\d.]/g, "")) ) || 0), 1),
     0
   );
 
   const planCarbs = plan.reduce(
-    (sum, item) => sum + ((Math.round(10 * item.servings * Number(String(item.carbs).replace(/[^\d.]/g, ""))) / 10) || 0),
+    (sum, item) => truncateToPlace(sum + (( item.servings * Number(String(item.carbs).replace(/[^\d.]/g, "")) ) || 0), 1),
     0
   );
 
   const planFat = plan.reduce(
-    (sum, item) => sum + ((Math.round(10 * item.servings * Number(String(item.fat).replace(/[^\d.]/g, ""))) / 10)|| 0),
+    (sum, item) => truncateToPlace(sum + ((item.servings * Number(String(item.fat).replace(/[^\d.]/g, "")))|| 0), 1),
     0
   );
 
   const planFiber = plan.reduce(
-    (sum, item) => sum + ((Math.round(10 * item.servings * Number(String(item.fiber).replace(/[^\d.]/g, ""))) / 10) || 0),
+    (sum, item) => truncateToPlace(sum + ((item.servings * Number(String(item.fiber).replace(/[^\d.]/g, "")) ) || 0), 1),
     0
   );
 
   const planSugar = plan.reduce(
-    (sum, item) => sum + ((Math.round(10 * item.servings * Number(String(item.sugar).replace(/[^\d.]/g, ""))) / 10) || 0),
+    (sum, item) => truncateToPlace(sum + ((  item.servings * Number(String(item.sugar).replace(/[^\d.]/g, "")) ) || 0), 1),
     0
   );
 
@@ -256,7 +260,7 @@ export default function HallLayout({ id, name }) {
                   </li>
                 ))}
               </ul>
-              <div className="meal-plan-total">Total: {planCalories} cal, {planProtein} protein, {planCarbs} carbs, {planFat} fat, {planFiber} fiber, {planSugar} sugar</div>
+              <div className="meal-plan-total">Total: {planCalories} cal, {planProtein} g protein, {planCarbs} g carbs, {planFat} g fat, {planFiber} g fiber, {planSugar} g sugar</div>
             </>
           )}
         </aside>
