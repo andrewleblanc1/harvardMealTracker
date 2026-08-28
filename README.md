@@ -11,15 +11,19 @@ carbs, fat, fiber, and sugar.
   shows that meal's menu. Adding an item to your meal plan lets you set how
   many servings you had and keeps a running nutrition total.
 - **Backend** — a small [FastAPI](https://fastapi.tiangolo.com/) service
-  (`app/main.py`, `app/meals.py`) that calls Harvard's CS50 dining API,
+  (`api/index.py`, `api/meals.py`) that calls Harvard's CS50 dining API,
   normalizes the raw recipe data into a consistent shape, and optionally
-  filters out items containing allergens you specify.
-- The Next.js route `app/api/menu/route.js` sits in between as a same-origin
-  proxy: the browser only ever talks to Next.js, which forwards the request
-  to the FastAPI backend. This keeps the backend's URL out of client code.
+  filters out items containing allergens you specify. It's deployed as its
+  own [Vercel Python serverless function](https://vercel.com/docs/frameworks/backend/fastapi) —
+  Vercel builds any `api/*.py` file with an `app` FastAPI instance
+  automatically, no separate server to run in production.
+- The browser calls the backend directly at `/api/py/menu` (same origin, so
+  there's no separate URL to expose). `next.config.js` rewrites that path to
+  a local `uvicorn` process during `next dev`, since that's the only piece
+  Next.js's dev server doesn't also run for you.
 
 ```
-Browser → Next.js (app/api/menu) → FastAPI (app/main.py) → CS50 Dining API
+Browser → /api/py/menu → FastAPI (api/index.py) → CS50 Dining API
 ```
 
 ## Project structure
@@ -30,22 +34,25 @@ app/
   layout.js               Root HTML layout + page metadata
   Icon.js                 Dining hall icon with a fallback if the image 404s
   globals.css             All app styling
-  api/menu/route.js       Next.js API route that proxies to the FastAPI backend
   dining/
     HallLayout.js         Shared UI for a single hall: meal tabs, menu list,
                            meal-plan sidebar with nutrition totals
     <hall-name>/page.js   One tiny page per dining hall that renders
                            HallLayout with that hall's id/name
-  main.py                 FastAPI app — /menu endpoint, hall/meal lookups
+api/
+  index.py                FastAPI app — /api/py/menu endpoint, hall/meal
+                           lookups (Vercel builds this as its own function)
   meals.py                Normalizes raw CS50 recipe data into a consistent
                            dict shape (name, calories, macros, allergens)
 public/icons/             Dining hall photos used by Icon.js
+next.config.js            Dev-only rewrite of /api/py/* to local uvicorn
+requirements.txt          Python deps for the api/ serverless function
 ```
 
 ## Running it locally
 
 You need two processes running at once: the Next.js frontend and the
-FastAPI backend it proxies to.
+FastAPI backend it calls.
 
 ### 1. Frontend (Next.js)
 
@@ -60,19 +67,16 @@ This starts the app at `http://localhost:3000`.
 
 ```bash
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8001
+cd api && uvicorn index:app --reload --port 8000
 ```
 
-By default the Next.js proxy expects the backend at `http://localhost:8001`.
-To point it somewhere else, set `FASTAPI_URL` (e.g. in `.env.local`):
-
-```
-FASTAPI_URL=http://localhost:8001
-```
+`next.config.js` expects the backend at `http://127.0.0.1:8000` during dev;
+in production Vercel routes `/api/py/*` straight to the deployed function,
+no configuration needed.
 
 ## API
 
-`GET /api/menu` (Next.js, proxied to FastAPI's `GET /menu`)
+`GET /api/py/menu` (FastAPI, deployed as a Vercel serverless function)
 
 | Param       | Required | Description                                              |
 |-------------|----------|-----------------------------------------------------------|

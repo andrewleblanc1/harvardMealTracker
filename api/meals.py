@@ -13,7 +13,7 @@ recipes = response.json()
 def standardNutritionFacts(recipes: dict) -> [standardizedNutritionFacts, indexConversion]:
     """Build a normalized recipe list plus a recipe-id -> list-index map.
 
-    `indexConversion` lets callers (see main.py) look up a recipe's entry in
+    `indexConversion` lets callers (see index.py) look up a recipe's entry in
     `standardizedNutritionFacts` by the raw recipe id used in menu items,
     since the standardized list itself is just indexed 0..n.
     """

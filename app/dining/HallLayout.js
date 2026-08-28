@@ -28,7 +28,7 @@ export default function HallLayout({ id, name }) {
     setLoading(true);
     setError(null);
 
-    fetch(`/api/menu?hall=${id}&meal=${meal}`)
+    fetch(`/api/py/menu?hall=${id}&meal=${meal}`)
       .then((res) => {
         if (!res.ok) throw new Error(`Request failed: ${res.status}`);
         return res.json();

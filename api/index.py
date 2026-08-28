@@ -1,10 +1,20 @@
 """FastAPI backend for the Harvard Dining app.
 
-Exposes a single /menu endpoint that the Next.js frontend proxies requests
-to (see app/api/menu/route.js). It fetches raw menu data from Harvard's
-CS50 dining API, normalizes it via meals.standardNutritionFacts, and
-optionally filters out items containing allergens the caller wants to avoid.
+Deployed as a single Vercel Python serverless function (Vercel looks for a
+`FastAPI` instance named `app` in api/index.py — see
+https://vercel.com/docs/frameworks/backend/fastapi). The Next.js frontend
+calls this directly at /api/py/menu; next.config.js rewrites that path to
+this function in production and to a local uvicorn process in dev (see
+README.md).
+
+Exposes a single /api/py/menu endpoint. It fetches raw menu data from
+Harvard's CS50 dining API, normalizes it via meals.standardNutritionFacts,
+and optionally filters out items containing allergens the caller wants to
+avoid.
 """
+
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI, HTTPException
 from meals import standardNutritionFacts
@@ -18,6 +28,14 @@ mealId = {"breakfast" : 0, "lunch" : 1, "dinner" : 2}
 
 locationId = {"adams" : 9, "annenberg" : 30, "cabot" : 5, "currier" : 38, "dunster" : 7, "eliot" : 14, "fly-by" : 29, "kirkland" : 14,
 "leverett": 16, "lowell" : 15, "mather" : 7, "pforzheimer" : 5, "quincy" : 8, "winthrop" : 15}
+
+
+def today_in_eastern() -> str:
+    """Dining halls run on Eastern time regardless of where this function's
+    server (or its UTC clock) actually runs, so "today" has to be computed in
+    that zone — a naive UTC date would roll over ~4-5 hours early.
+    """
+    return datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d")
 
 
 def loadMeals(date: str, location: int, meal: int, allergens: list = []) -> list:
@@ -49,9 +67,9 @@ def loadMeals(date: str, location: int, meal: int, allergens: list = []) -> list
     else:
         # Allergen filter: de-duplicate recipes, then skip any recipe that
         # is flagged for one of the requested allergens.
-        # Currently unused as there are not many menu items, thus 
+        # Currently unused as there are not many menu items, thus
         # the current allergen labels should be fine
-        # However, this has been implemented, if this feature 
+        # However, this has been implemented, if this feature
         # will be shipped in the future
         sett = set()
         for item in menu:
@@ -70,13 +88,14 @@ def loadMeals(date: str, location: int, meal: int, allergens: list = []) -> list
     return standardizedMenu
 
 
-@app.get("/menu")
-def get_menu(date: str, hall: str, meal: str, allergens: str = ""):
+@app.get("/api/py/menu")
+def get_menu(hall: str, meal: str, date: str = None, allergens: str = ""):
     """Return the normalized menu for a given hall, meal, and date.
 
     `hall` and `meal` are validated against the lookup tables above and
-    turned into the numeric ids the upstream API expects; `allergens` is a
-    comma-separated string (e.g. "peanut,dairy") that gets split into a list.
+    turned into the numeric ids the upstream API expects; `date` defaults to
+    today in Eastern time when omitted; `allergens` is a comma-separated
+    string (e.g. "peanut,dairy") that gets split into a list.
     """
 
     location = locationId.get(hall)
@@ -87,4 +106,5 @@ def get_menu(date: str, hall: str, meal: str, allergens: str = ""):
         raise HTTPException(status_code=400, detail=f"Unknown meal: {meal}")
 
     allergenList = allergens.split(",") if allergens else []
-    return loadMeals(date, location, mealNum, allergenList)
+    items = loadMeals(date or today_in_eastern(), location, mealNum, allergenList)
+    return {"items": items}
