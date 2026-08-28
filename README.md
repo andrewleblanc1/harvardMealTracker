@@ -93,3 +93,42 @@ Returns `{ "items": [ ... ] }`, where each item has `name`, `serving_size`,
 
 ## Reflection
 
+- Why did I build this website?
+Quite simply, I recognized a problem in my everyday life that could be solved
+through a personal project. Thus the prospect of creating a website that handled 
+my daily struggle of having to go through numerous links (10 + links per meal)  
+on the Harvard Dining website to track my calories and macronutrients throughout 
+the day was very appealing. The specific new features that this website provides
+are a macronutrient calculator and basic nutrition facts all on one page.
+- Challenges and key decisions
+The CS50 api documentation is all written in python. Thus a big challenge was
+calling the api using a javascript framework like next.js. However, through 
+discussions with my colleagues and my own research, I quickly found FastApi 
+to solve this problem. I chose this specific web framework due to its fast speeds
+
+Another challenge was designing the UI and coding the frontend of this app. I am
+not very experienced in frontend development and designing UI since my area of 
+expertise is on the backend. However, I was able to use claude to find templates 
+for my frontend that greatly simplified this process and saved me countless days
+of coding.
+- What I would do differently
+if I were to make changes, it would be to have an automated process (like a github action)
+to load the menu at the beginning of each day and store it on the backend instead of 
+constantly making API calls. This would speed up the loading time greatly. Other improvements
+include cleaning up the user interface, adding an allergen feature, and a food diary for
+users that sign in. I did not make these changes simply because the school year starts next 
+week and the current version of the app accomplishes the goals I set forth at the beginning.
+- What I learned
+The biggest learning moments were learning how to do frontend development with react and 
+next.js. I have used an html, css, and flask framework before, but for modern web 
+development, this framework seemed outdated and slow. Thus it was great to finally dive into 
+the deep end with next.js and fastapi. I spend two days learning how to use React and Javascript basics. 
+While I will admit Claude did a lot of work on the frontend, learning how to code in next.js allowed 
+me to catch bugs and make my own minor tweaks such as adding the macronutrient calculator, and allowing
+users to modify servings sizes. Overall, this whole experience was greatly rewarding as it was my first
+real experiment using the next.js + fastapi framework.I look forward to continuing my learning journey
+through more projects in the future.
+
+
+
+
