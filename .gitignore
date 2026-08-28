@@ -13,6 +13,7 @@ out/
 # Python
 __pycache__/
 *.pyc
+.venv/
 
 # Editor / OS
 .vscode/
