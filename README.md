@@ -12,8 +12,7 @@ carbs, fat, fiber, and sugar.
   many servings you had and keeps a running nutrition total.
 - **Backend** — a small [FastAPI](https://fastapi.tiangolo.com/) service
   (`api/index.py`, `api/meals.py`) that calls Harvard's CS50 dining API,
-  normalizes the raw recipe data into a consistent shape, and optionally
-  filters out items containing allergens you specify. It's deployed as its
+  normalizes the raw recipe data into a consistent shape It's deployed as its
   own [Vercel Python serverless function](https://vercel.com/docs/frameworks/backend/fastapi) —
   Vercel builds any `api/*.py` file with an `app` FastAPI instance
   automatically, no separate server to run in production.
@@ -71,7 +70,7 @@ This starts the app at `http://localhost:3000`.
 
 ```bash
 pip install -r requirements.txt
-cd api && uvicorn index:app --reload --port 8000
+cd api && uvicorn index:app 
 ```
 
 `next.config.js` expects the backend at `http://127.0.0.1:8000` during dev;
